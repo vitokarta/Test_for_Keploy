@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments  
+venv/
+
+# Database files
+*.db
+*.sqlite
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
