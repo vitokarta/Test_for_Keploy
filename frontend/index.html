@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management - Keploy Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Student Management System</h1>
+            <p>Keploy API 測試演示專案</p>
+        </header>
+
+        <main>
+            <section class="form-section">
+                <h2>新增學生</h2>
+                <form id="studentForm">
+                    <div class="form-group">
+                        <label for="name">姓名：</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">電子郵件：</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密碼：</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" id="submitBtn">新增學生</button>
+                    <button type="button" id="cancelBtn" style="display: none;">取消編輯</button>
+                </form>
+            </section>
+
+            <section class="list-section">
+                <div class="section-header">
+                    <h2>學生列表</h2>
+                    <button id="refreshBtn">重新整理</button>
+                </div>
+                <div id="studentsList">
+                    <div class="loading">載入中...</div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>API 狀態: <span id="apiStatus">檢查中...</span></p>
+        </footer>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

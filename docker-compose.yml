@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  fastapi-app:
+    build: ./backend
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./backend:/app
+    networks:
+      - keploy-network
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  keploy:
+    image: ghcr.io/keploy/keploy:latest
+    depends_on:
+      - fastapi-app
+    volumes:
+      - ./keploy-tests:/tmp/keploy-tests
+      - ./backend:/app
+    networks:
+      - keploy-network
+    environment:
+      - KEPLOY_MODE=record
+    command: ["record", "--container-name", "fastapi-app"]
+
+networks:
+  keploy-network:
+    driver: bridge
