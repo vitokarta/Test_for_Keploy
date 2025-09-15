@@ -11,11 +11,12 @@ function setupEventListeners() {
     document.getElementById('studentForm').addEventListener('submit', handleFormSubmit);
     document.getElementById('refreshBtn').addEventListener('click', loadStudents);
     document.getElementById('cancelBtn').addEventListener('click', cancelEdit);
-    
+    document.getElementById('calculateBtn').addEventListener('click', calculateAverage);
+
     const modal = document.getElementById('modal');
     const closeBtn = modal.querySelector('.close');
     closeBtn.addEventListener('click', () => modal.style.display = 'none');
-    
+
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
             modal.style.display = 'none';
@@ -220,6 +221,53 @@ function showMessage(message, type) {
     setTimeout(() => {
         modal.style.display = 'none';
     }, 3000);
+}
+
+async function calculateAverage() {
+    const numbersInput = document.getElementById('numbers');
+    const resultDiv = document.getElementById('averageResult');
+
+    const inputText = numbersInput.value.trim();
+    if (!inputText) {
+        resultDiv.innerHTML = '<div class="error">請輸入數字</div>';
+        return;
+    }
+
+    try {
+        const numbers = inputText.split(',').map(num => {
+            const parsed = parseFloat(num.trim());
+            if (isNaN(parsed)) {
+                throw new Error(`"${num.trim()}" 不是有效的數字`);
+            }
+            return parsed;
+        });
+
+        const response = await fetch(`${API_BASE_URL}/utils/calculate-average`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(numbers)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            resultDiv.innerHTML = `
+                <div class="success">
+                    <h3>計算結果</h3>
+                    <p><strong>輸入數字:</strong> ${result.numbers.join(', ')}</p>
+                    <p><strong>平均值:</strong> ${result.average.toFixed(2)}</p>
+                    <p><strong>數字個數:</strong> ${result.count}</p>
+                </div>
+            `;
+        } else {
+            throw new Error(result.detail || '計算失敗');
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="error">錯誤: ${error.message}</div>`;
+        console.error('計算平均值失敗:', error);
+    }
 }
 
 function escapeHtml(text) {

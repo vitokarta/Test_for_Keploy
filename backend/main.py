@@ -5,7 +5,7 @@ from typing import List
 import models
 from models import Student, StudentCreate, StudentUpdate, StudentResponse
 from database import get_database, create_tables
-from utils import calculate_gpa, validate_student_age, get_grade_level
+from utils import calculate_gpa, validate_student_age, get_grade_level, calculate_average
 
 app = FastAPI(title="Student Management API", version="1.0.0")
 
@@ -111,6 +111,19 @@ def get_student_grade_level(score: float):
             "score": score,
             "grade_level": grade_level,
             "description": f"Score {score} corresponds to grade {grade_level}"
+        }
+    except (ValueError, TypeError) as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/utils/calculate-average")
+def get_average(numbers: List[float]):
+    """計算數字列表的平均值"""
+    try:
+        average = calculate_average(numbers)
+        return {
+            "numbers": numbers,
+            "average": average,
+            "count": len(numbers)
         }
     except (ValueError, TypeError) as e:
         raise HTTPException(status_code=400, detail=str(e))

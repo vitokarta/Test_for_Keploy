@@ -76,10 +76,10 @@ def get_grade_level(score: float) -> str:
     """
     if not isinstance(score, (int, float)):
         raise TypeError("分數必須是數字")
-    
+
     if not 0 <= score <= 100:
         raise ValueError("分數必須在 0-100 範圍內")
-    
+
     if score >= 97:
         return "A+"
     elif score >= 93:
@@ -96,3 +96,20 @@ def get_grade_level(score: float) -> str:
         return "D"
     else:
         return "F"
+
+
+def calculate_average(numbers: list) -> float:
+    """
+    計算數字列表的平均值
+    Args:
+        numbers: 數字列表
+    Returns:
+        平均值
+    """
+    if not numbers:
+        return 0
+
+    if not all(isinstance(n, (int, float)) for n in numbers):
+        raise TypeError("所有元素必須是數字")
+
+    return sum(numbers) / len(numbers)
