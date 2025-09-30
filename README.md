@@ -69,7 +69,7 @@ uvicorn main:app --reload
 
 ```bash
 cd frontend
-python -m http.server 8080
+python3 -m http.server 8080
 ```
 
 前端將在 `http://localhost:8080` 可用

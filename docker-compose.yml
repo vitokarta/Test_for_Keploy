@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: student-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: student_db
+      MYSQL_USER: student_user
+      MYSQL_PASSWORD: student_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - keploy-network
+    restart: unless-stopped
+
+  student-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: student-backend
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=mysql+pymysql://student_user:student_pass@mysql:3306/student_db
+    depends_on:
+      - mysql
+    networks:
+      - keploy-network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  keploy-network:
+    external: true
