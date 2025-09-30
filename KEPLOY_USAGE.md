@@ -57,6 +57,10 @@ curl -X POST "http://localhost:8001/students/1/calculate-gpa" \
 ### 使用 Mock 數據測試（默認，推薦）
 ```bash
 keploy test -c "docker compose up" --container-name "student-backend" -n "keploy-network" --delay 10 --buildDelay 60
+
+#
+keploy test -c "docker compose up" --container-name "student-backend" --pass-through-ports 3306 -n "keploy-network" 
+
 ```
 
 ### 使用真實資料庫測試（需要分步驟）
