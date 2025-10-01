@@ -11,7 +11,7 @@ function setupEventListeners() {
     document.getElementById('studentForm').addEventListener('submit', handleFormSubmit);
     document.getElementById('refreshBtn').addEventListener('click', loadStudents);
     document.getElementById('cancelBtn').addEventListener('click', cancelEdit);
-    document.getElementById('calculateBtn').addEventListener('click', calculateAverage);
+    document.getElementById('githubSearchBtn').addEventListener('click', searchGitHubUser);
 
     const modal = document.getElementById('modal');
     const closeBtn = modal.querySelector('.close');
@@ -223,50 +223,62 @@ function showMessage(message, type) {
     }, 3000);
 }
 
-async function calculateAverage() {
-    const numbersInput = document.getElementById('numbers');
-    const resultDiv = document.getElementById('averageResult');
+async function searchGitHubUser() {
+    const usernameInput = document.getElementById('githubUsername');
+    const resultDiv = document.getElementById('githubResult');
 
-    const inputText = numbersInput.value.trim();
-    if (!inputText) {
-        resultDiv.innerHTML = '<div class="error">請輸入數字</div>';
+    const username = usernameInput.value.trim();
+    if (!username) {
+        resultDiv.innerHTML = '<div class="error">請輸入GitHub用戶名</div>';
         return;
     }
 
+    resultDiv.innerHTML = '<div class="loading">查詢中...</div>';
+
     try {
-        const numbers = inputText.split(',').map(num => {
-            const parsed = parseFloat(num.trim());
-            if (isNaN(parsed)) {
-                throw new Error(`"${num.trim()}" 不是有效的數字`);
-            }
-            return parsed;
-        });
-
-        const response = await fetch(`${API_BASE_URL}/utils/calculate-average`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(numbers)
-        });
-
+        const response = await fetch(`${API_BASE_URL}/github/user/${username}`);
         const result = await response.json();
 
         if (response.ok) {
             resultDiv.innerHTML = `
-                <div class="success">
-                    <h3>計算結果</h3>
-                    <p><strong>輸入數字:</strong> ${result.numbers.join(', ')}</p>
-                    <p><strong>平均值:</strong> ${result.average.toFixed(2)}</p>
-                    <p><strong>數字個數:</strong> ${result.count}</p>
+                <div class="success github-user-card">
+                    <div class="user-header">
+                        <img src="${result.avatar_url}" alt="${result.username}" class="avatar">
+                        <div class="user-info">
+                            <h3>${escapeHtml(result.name || result.username)}</h3>
+                            <p class="username">@${escapeHtml(result.username)}</p>
+                            ${result.bio ? `<p class="bio">${escapeHtml(result.bio)}</p>` : ''}
+                        </div>
+                    </div>
+                    <div class="user-stats">
+                        <div class="stat">
+                            <strong>${result.public_repos}</strong>
+                            <span>倉庫</span>
+                        </div>
+                        <div class="stat">
+                            <strong>${result.followers}</strong>
+                            <span>關注者</span>
+                        </div>
+                        <div class="stat">
+                            <strong>${result.following}</strong>
+                            <span>關注中</span>
+                        </div>
+                    </div>
+                    <div class="user-details">
+                        ${result.company ? `<p><strong>公司:</strong> ${escapeHtml(result.company)}</p>` : ''}
+                        ${result.location ? `<p><strong>位置:</strong> ${escapeHtml(result.location)}</p>` : ''}
+                        ${result.blog ? `<p><strong>網站:</strong> <a href="${result.blog}" target="_blank">${escapeHtml(result.blog)}</a></p>` : ''}
+                        <p><strong>加入時間:</strong> ${new Date(result.created_at).toLocaleDateString('zh-TW')}</p>
+                        <p><a href="${result.github_url}" target="_blank">查看 GitHub 個人資料</a></p>
+                    </div>
                 </div>
             `;
         } else {
-            throw new Error(result.detail || '計算失敗');
+            throw new Error(result.detail || '查詢失敗');
         }
     } catch (error) {
         resultDiv.innerHTML = `<div class="error">錯誤: ${error.message}</div>`;
-        console.error('計算平均值失敗:', error);
+        console.error('GitHub 用戶查詢失敗:', error);
     }
 }
 

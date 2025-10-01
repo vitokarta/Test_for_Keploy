@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
+import httpx
 import models
 from models import Student, StudentCreate, StudentUpdate, StudentResponse
 from database import get_database, create_tables
@@ -127,6 +128,46 @@ def get_average(numbers: List[float]):
         }
     except (ValueError, TypeError) as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/github/user/{username}")
+async def get_github_user(username: str):
+    """取得 GitHub 用戶資訊 - 用於測試外部 API 調用"""
+    # 使用 Keploy CA 證書（如果存在）
+    import os
+    ca_bundle = os.getenv("REQUESTS_CA_BUNDLE", "/tmp/ca.crt")
+    verify = ca_bundle if os.path.exists(ca_bundle) else True
+
+    async with httpx.AsyncClient(verify=verify) as client:
+        try:
+            response = await client.get(f"https://api.github.com/users/{username}")
+
+            if response.status_code == 404:
+                raise HTTPException(status_code=404, detail="GitHub user not found")
+            elif response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail="GitHub API error")
+
+            user_data = response.json()
+
+            return {
+                "username": user_data.get("login"),
+                "name": user_data.get("name"),
+                "avatar_url": user_data.get("avatar_url"),
+                "bio": user_data.get("bio"),
+                "company": user_data.get("company"),
+                "blog": user_data.get("blog"),
+                "location": user_data.get("location"),
+                "email": user_data.get("email"),
+                "public_repos": user_data.get("public_repos"),
+                "followers": user_data.get("followers"),
+                "following": user_data.get("following"),
+                "created_at": user_data.get("created_at"),
+                "github_url": user_data.get("html_url")
+            }
+
+        except httpx.RequestError as e:
+            raise HTTPException(status_code=503, detail="Unable to connect to GitHub API")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

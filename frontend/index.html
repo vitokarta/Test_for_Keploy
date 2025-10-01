@@ -14,35 +14,37 @@
         </header>
 
         <main>
-            <section class="form-section">
-                <h2>新增學生</h2>
-                <form id="studentForm">
-                    <div class="form-group">
-                        <label for="name">姓名：</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">電子郵件：</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">密碼：</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    <button type="submit" id="submitBtn">新增學生</button>
-                    <button type="button" id="cancelBtn" style="display: none;">取消編輯</button>
-                </form>
-            </section>
+            <div class="left-column">
+                <section class="form-section">
+                    <h2>新增學生</h2>
+                    <form id="studentForm">
+                        <div class="form-group">
+                            <label for="name">姓名：</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">電子郵件：</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">密碼：</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <button type="submit" id="submitBtn">新增學生</button>
+                        <button type="button" id="cancelBtn" style="display: none;">取消編輯</button>
+                    </form>
+                </section>
 
-            <section class="calculator-section">
-                <h2>平均值計算器</h2>
-                <div class="form-group">
-                    <label for="numbers">輸入數字 (用逗號分隔)：</label>
-                    <input type="text" id="numbers" placeholder="例如: 85, 92, 78, 95, 88">
-                </div>
-                <button id="calculateBtn">計算平均值</button>
-                <div id="averageResult" class="result-display"></div>
-            </section>
+                <section class="github-section">
+                    <h2>GitHub 用戶查詢</h2>
+                    <div class="form-group">
+                        <label for="githubUsername">GitHub 用戶名：</label>
+                        <input type="text" id="githubUsername" placeholder="例如: vitokarta">
+                    </div>
+                    <button id="githubSearchBtn">查詢用戶</button>
+                    <div id="githubResult" class="result-display"></div>
+                </section>
+            </div>
 
             <section class="list-section">
                 <div class="section-header">
