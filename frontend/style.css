@@ -44,18 +44,18 @@ header p {
 main {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr 2fr;
     gap: 30px;
 }
 
-.form-section, .list-section {
+.form-section, .list-section, .calculator-section {
     background: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-section h2, .list-section h2 {
+.form-section h2, .list-section h2, .calculator-section h2 {
     color: #333;
     margin-bottom: 20px;
     font-size: 1.5rem;
@@ -285,34 +285,64 @@ footer {
     font-weight: 600;
 }
 
+.result-display {
+    margin-top: 20px;
+    min-height: 50px;
+}
+
+.result-display .success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.result-display .error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.result-display h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.result-display p {
+    margin-bottom: 5px;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 10px;
     }
-    
+
     main {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    
+
     header h1 {
         font-size: 2rem;
     }
-    
-    .form-section, .list-section {
+
+    .form-section, .list-section, .calculator-section {
         padding: 20px;
     }
-    
+
     .student-card {
         flex-direction: column;
         gap: 15px;
         text-align: center;
     }
-    
+
     .student-actions {
         justify-content: center;
     }
-    
+
     .section-header {
         flex-direction: column;
         gap: 10px;

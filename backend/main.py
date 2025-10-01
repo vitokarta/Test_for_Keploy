@@ -5,6 +5,7 @@ from typing import List
 import models
 from models import Student, StudentCreate, StudentUpdate, StudentResponse
 from database import get_database, create_tables
+from utils import calculate_gpa, validate_student_age, get_grade_level, calculate_average
 
 app = FastAPI(title="Student Management API", version="1.0.0")
 
@@ -81,6 +82,51 @@ def delete_student(student_id: int, db: Session = Depends(get_database)):
     db.delete(student)
     db.commit()
     return {"message": "Student deleted successfully"}
+
+@app.post("/students/{student_id}/calculate-gpa")
+def calculate_student_gpa(student_id: int, scores: List[float], db: Session = Depends(get_database)):
+    """計算指定學生的 GPA"""
+    student = db.query(Student).filter(Student.id == student_id).first()
+    if student is None:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    try:
+        gpa = calculate_gpa(scores)
+        return {
+            "student_id": student_id,
+            "student_name": student.name,
+            "scores": scores,
+            "gpa": gpa,
+            "total_subjects": len(scores)
+        }
+    except (ValueError, TypeError) as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/utils/grade-level/{score}")
+def get_student_grade_level(score: float):
+    """根據分數獲取等級"""
+    try:
+        grade_level = get_grade_level(score)
+        return {
+            "score": score,
+            "grade_level": grade_level,
+            "description": f"Score {score} corresponds to grade {grade_level}"
+        }
+    except (ValueError, TypeError) as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/utils/calculate-average")
+def get_average(numbers: List[float]):
+    """計算數字列表的平均值"""
+    try:
+        average = calculate_average(numbers)
+        return {
+            "numbers": numbers,
+            "average": average,
+            "count": len(numbers)
+        }
+    except (ValueError, TypeError) as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
