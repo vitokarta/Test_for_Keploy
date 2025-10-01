@@ -38,3 +38,4 @@ volumes:
 networks:
   keploy-network:
     external: true
+    driver: bridge
