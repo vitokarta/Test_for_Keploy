@@ -6,8 +6,8 @@
 
 ### 1. 取得專案
 ```bash
-git clone <repository-url>
-cd test_for_Keploy
+git clone https://github.com/vitokarta/Test_for_Keploy.git
+cd Test_for_Keploy
 ```
 
 ### 2. 安裝 Keploy
@@ -83,6 +83,11 @@ keploy test -c "docker compose up student-backend" --container-name "student-bac
 ```bash
 keploy test -c "docker compose up student-backend" --container-name "student-backend" -n "keploy-network" --delay 10 --buildDelay 60 --mocking=false
 ```
+
+### 🔧 可選參數
+- `-t "test-set-1"` - 指定特定的測試集（預設執行所有測試集）
+- `--delay 30` - 增加等待時間（如遇到啟動超時）
+- `--buildDelay 120` - 增加容器建置時間
 
 ## 📊 查看結果
 
