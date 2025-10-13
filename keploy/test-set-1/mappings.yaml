@@ -1,0 +1,8 @@
+version: api.keploy.io/v1beta1
+kind: TestMocksMapping
+test_set_id: test-set-1
+tests:
+    - id: test-1
+      mocks: mock-13
+    - id: test-2
+      mocks: mock-14,mock-16
